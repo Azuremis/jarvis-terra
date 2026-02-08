@@ -444,6 +444,63 @@ Available locations:
 - `ash` — Ashburn, Virginia, USA
 - `hil` — Hillsboro, Oregon, USA
 
+### Switching AI Providers
+
+OpenClaw supports multiple AI providers out of the box. This repo is configured for Anthropic Claude by default, but you can easily switch to other providers.
+
+**Supported Providers:**
+- **Anthropic Claude** (default) — Claude Opus, Sonnet, Haiku
+- **OpenAI** — GPT-4, GPT-3.5, o1, o3
+- **DeepSeek** — DeepSeek V3 and R1 models
+- **Local Models** — via Ollama or LM Studio
+
+**To switch providers:**
+
+1. Edit `openclaw.json` in your [config repo](https://github.com/andreesg/openclaw-docker-config):
+   ```json
+   {
+     "agents": {
+       "defaults": {
+         "model": {
+           "primary": "openai/gpt-4"
+         }
+       }
+     },
+     "auth": {
+       "profiles": {
+         "openai:main": {
+           "provider": "openai",
+           "mode": "token"
+         }
+       },
+       "order": {
+         "openai": ["openai:main"]
+       }
+     }
+   }
+   ```
+
+2. Update `secrets/openclaw.env` with the appropriate API key:
+   ```bash
+   # For OpenAI
+   OPENAI_API_KEY=sk-...
+
+   # For DeepSeek
+   DEEPSEEK_API_KEY=sk-...
+   ```
+
+3. Push config and redeploy:
+   ```bash
+   make push-config deploy
+   ```
+
+**For local models (Ollama):**
+- No API key needed
+- Set model to `ollama/llama3` or similar
+- Configure Ollama endpoint in openclaw.json
+
+See [OpenClaw provider documentation](https://docs.openclaw.ai/providers) for complete configuration examples for each provider.
+
 ---
 
 ## 🐛 Troubleshooting
